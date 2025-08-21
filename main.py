@@ -188,7 +188,9 @@ class database:
         lmba_TableRow = lambda cell_0, cell_1, cell_2 : db_table.add_row(cell_0[0],
                                                                          cell_1[1],
                                                                          cell_2[2])
+        
         db_table = Table(title= "< Registered projects >")
+
 
         lmba_TableCollum("Project name")
         lmba_TableCollum("Root directory")
@@ -313,32 +315,34 @@ class projectSetup:
                                "e       : environment modelling. Contains houdini folder.",
                                "g       : generic project",
                                "maya    : include maya workspace",
+                               "-r      : include resources in project"
                                "back    : go back"]
             
             print(t.ter[1], "choose workspace type")
             WorkspaceChoice = input(t.ter[1])
 
+            lmba_CopyTo = lambda path, t_dir : s.copy("./" + path, t_dir)
 
             if "a" in WorkspaceChoice:
-                s.copy("./workspaces/WorkFile_animation.blend", TargetDir)
-                s.copy("./exporters/SceneExport_anima.py", TargetDir + dict.dirs.SCRPT.value[1])
+                lmba_CopyTo("./workspaces/WorkFile_animation.blend", TargetDir)
+                lmba_CopyTo("./exporters/SceneExport_anima.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "c" in WorkspaceChoice:
-                s.copy("./workspaces/WorkFile_character.blend", TargetDir)
-                s.copy("./exporters/SceneExport_character.py", TargetDir + dict.dirs.SCRPT.value[1])
+                lmba_CopyTo("./workspaces/WorkFile_character.blend", TargetDir)
+                lmba_CopyTo("./exporters/SceneExport_character.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "e" in WorkspaceChoice:
-                s.copy("./workspaces/WorkFile_env.blend", TargetDir)
-                s.copy("./exporters/SceneExport_env.py", TargetDir + dict.dirs.SCRPT.value[1])
+                lmba_CopyTo("./workspaces/WorkFile_env.blend", TargetDir)
+                lmba_CopyTo("./exporters/SceneExport_env.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "g" in WorkspaceChoice:
-                s.copy("./workspaces/WorkFile_generic.blend", TargetDir)
+                lmba_CopyTo("./workspaces/WorkFile_generic.blend", TargetDir)
 
             if "maya" in WorkspaceChoice:
-                s.copy("./workspaces/workspace.mel", TargetDir) # i wanna get to this later
+                lmba_CopyTo("./workspaces/workspace.mel", TargetDir) # i wanna get to this later
 
             if "-r" in WorkspaceChoice:
-                pass 
+                lmba_CopyTo("./resources", TargetDir + dict.dirs.X.value[0])
 
             if WorkspaceChoice == "back":
                 commands.StartingMenu()
