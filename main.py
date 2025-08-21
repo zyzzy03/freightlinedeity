@@ -61,7 +61,10 @@ class ricing:
 
         if os_mode == "win":
             subprocess.Popen("cls", shell=True)
-            
+
+    def exit():
+        exit_input = input(t.ter[1] + "press any key to exit: ")
+        return            
 
 
 
@@ -140,19 +143,33 @@ class database:
     def sqlReadExe():
         TerminalDecor_mod.asciiSeperators.LineMid()
         os.system('mode con lines=25 cols=135')
-        
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
+        
+        lmba_TableCollum = lambda ColName : db_table.add_column(ColName, 
+                                                                justify="left", 
+                                                                no_wrap=False)
+        lmba_TableRow = lambda cell_0, cell_1, cell_2, cell_3 : db_table.add_row(cell_0[0],
+                                                                                 cell_1[1],
+                                                                                 cell_2[2],
+                                                                                 cell_3[3])
+        db_table = Table(title= "< Registered projects >")
 
-        x = c.execute("""SELECT * FROM vital;""")
-        x = c.fetchall()
+        c.execute("""SELECT * FROM vital;""")
+        TableContents = c.fetchall()
 
-        print(t.ter[0] + t.ter[2] + "Apologies for the scuffed presnetation :(")
+        lmba_TableCollum("Name")
+        lmba_TableCollum("Version")
+        lmba_TableCollum("Location")
+        lmba_TableCollum("status")
+        # print(t.ter[0] + t.ter[2] + "Apologies for the scuffed presnetation :(")
+        # print("|     " + "< Name >" + "     |     " + "< Version >" + "     |     " + "< Location >"  + "     |     " + "< Status >"  + "     |")
+        # TerminalDecor_mod.asciiSeperators.LineMid()
+        for TableContents in TableContents:
+            lmba_TableRow(TableContents, TableContents, TableContents, TableContents)
 
-        print("|     " + "< Name >" + "     |     " + "< Version >" + "     |     " + "< Location >"  + "     |     " + "< Status >"  + "     |")
-        TerminalDecor_mod.asciiSeperators.LineMid()
-        for x in x:
-            print(t.ter[0] + x[0] + "\t|\t" + x[1] + "\t|\t" +  x[2] + "\t|\t" +  x[3] + "\t")
+        console = Console()
+        console.print(db_table)
 
         conn.commit()
         conn.close()
@@ -162,22 +179,33 @@ class database:
     def sqlReadProj():
         TerminalDecor_mod.asciiSeperators.LineMid()
         print("project mode")
-            
+        
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
+        lmba_TableCollum = lambda ColName : db_table.add_column(ColName, 
+                                                                justify="left", 
+                                                                no_wrap=False)
+        lmba_TableRow = lambda cell_0, cell_1, cell_2 : db_table.add_row(cell_0[0],
+                                                                         cell_1[1],
+                                                                         cell_2[2])
+        db_table = Table(title= "< Registered projects >")
+
+        lmba_TableCollum("Project name")
+        lmba_TableCollum("Root directory")
+        lmba_TableCollum("status")
 
         c.execute("""SELECT * FROM projects;""")
-        x = c.fetchall()
+        TableContents = c.fetchall()
 
-        print(t.ter[0] + t.ter[1] + "Apologies for the scuffed presnetation ;(")
-        print(t.ter[0] + "\t" + "< Project name >" + "\t|\t" + "< Location >" + "\t|\t" + "< status >" + "\t|")
-        TerminalDecor_mod.asciiSeperators.LineMid()
-        for x in x:
-            print(t.ter[0] + x[0] + "\t| " + x[1] + "\t| " + x[2])
-        
+        for TableContents in TableContents:
+            lmba_TableRow(TableContents, TableContents, TableContents)
+
+        console = Console()
+        console.print(db_table)
+
         conn.commit()
         conn.close()
-        
+        ricing.exit()
 
 
 #---------------------------
@@ -479,6 +507,7 @@ class commands:
             """ register to database """
             if CommandInput == "exe -reg": 
                 database.sqlInput_vital()
+                commands.StartingMenu()
 
             if CommandInput == "proj -reg": 
                 database.sqlInput_proj()
@@ -487,10 +516,12 @@ class commands:
             """ show registered items """
             if CommandInput == "exe -show":
                 database.sqlReadExe()
+                ricing.exit()
                 commands.StartingMenu()
 
             if CommandInput == "proj -show":
                 database.sqlReadProj()
+                ricing.exit()
                 commands.StartingMenu()
 
             if CommandInput == "back": # 
