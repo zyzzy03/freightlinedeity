@@ -3,6 +3,8 @@ import TerminalDecor_mod
 import ter_mod as t
 import dict_mod as dict
 import sheller_mod as sheller
+from rich.console import Console
+from rich.table import Table
 
 # THIRD PROTOTYPE
 # ~~ Early Alpha (v03x) ~~
@@ -21,9 +23,6 @@ import sheller_mod as sheller
 
 # im gonna rewrite this in C++, one day, and when I mean one day
 # i mean when i get the gcc compiler to fucking run
-
-class initalising:
-    pass
 
 
 #---------------------------
@@ -94,6 +93,7 @@ class database:
         time.sleep(3)
         conn.commit()
         conn.close()
+
 
 # SQL INPUTS V ========================= V
     def sqlInput_vital():
@@ -180,7 +180,6 @@ class database:
         
 
 
-
 #---------------------------
 # ! Project setup
 #---------------------------
@@ -207,7 +206,7 @@ class projectSetup:
         TerminalDecor_mod.asciiSeperators.LineMid()
 
         print(t.ter[0], "Choose project structure type: ")
-        TerminalOptions = ["FLD/home/create/ProjectSetup",
+        TerminalOptions = ["Location: FLD/home/create/ProjectSetup",
                         "a    : animation",
                         "c    : character modelling", 
                         "g    : generic, catch-all project set-up",
@@ -280,7 +279,7 @@ class projectSetup:
 
     def WorkspaceFiles():
             """ Writes scripts and Workspace files to project """
-            TerminalOptions = ["FLD/home/create/ProjectSetup/WorkspaceFiles",
+            TerminalOptions = ["Location: FLD/home/create/ProjectSetup/WorkspaceFiles",
                                "a       : animation workspace",
                                "c       : character modelling and rigging",
                                "e       : environment modelling. Contains houdini folder.",
@@ -316,13 +315,15 @@ class projectSetup:
             if WorkspaceChoice == "back":
                 commands.StartingMenu()
 
+
+
 #---------------------------
 # ! FREIGHTING
 #---------------------------
 class freight:
     def freighting():
         TerminalDecor_mod.asciiSeperators.LineMid()
-        DepartCommands = ["FLD/home/freighting",
+        DepartCommands = ["Location: FLD/home/freighting",
                         "Commands",
                         "basic        : move specific folders/files. No need for registered projects/exes",
                         "intermodal   : schedule exporting from registered projects",
@@ -420,7 +421,7 @@ class freight:
 class commands:
     def StartingMenu():
         TerminalDecor_mod.asciiSeperators.LineOpen()
-        TerminalOptions = ["FLD/home",
+        TerminalOptions = ["Location: FLD/home",
                            "Commands:", 
                            "create      : (Create project structure)",  
                            "freight     : (Schedule file transfer)", 
@@ -455,41 +456,44 @@ class commands:
                 print(t.ter[0])
 
 
+
     def settings():
             TerminalDecor_mod.asciiSeperators.LineMid()
-            TerminalOptions = ["FLD/home/settings",
-                                "Avialable suffix commands -exe | -reg | -rm",
-                                "setup      : (create project register: RUN FIRST)", 
-                                "reg -exe   : register software binaries/.exe to database",
-                                "reg -proj  : (Register projects)", 
-                                "show -exe  : show software .exe",
-                                "show -proj : show registered projects",
-                                "back       : go back (duh)"]
+            TerminalOptions = ["Location: FLD/home/settings",
+                                "Syntax <command> <suffix command>",
+                                "Avialable suffix commands -show | -reg | -rm",
+                                "setup  : (create project register: RUN FIRST)", 
+                                "exe    : register software binaries/.exe to database",
+                                "proj   : (Register projects)",
+                                "back   : go back (duh)"]
 
             TerminalDecor_mod.asciiRicing.lister(TerminalOptions)
 
             print(t.ter[0])
             CommandInput = input(t.ter[1])
-            if CommandInput == "setup":
+            if CommandInput == "setup": # 
                 database.sqlSetup()
                 commands.StartingMenu()
-                
-            if CommandInput == "exe -reg":
+            
+
+            """ register to database """
+            if CommandInput == "exe -reg": 
                 database.sqlInput_vital()
 
-            if CommandInput == "proj -reg":
+            if CommandInput == "proj -reg": 
                 database.sqlInput_proj()
                 commands.StartingMenu()
             
+            """ show registered items """
             if CommandInput == "exe -show":
                 database.sqlReadExe()
                 commands.StartingMenu()
 
-            if CommandInput == "show -proj":
+            if CommandInput == "proj -show":
                 database.sqlReadProj()
                 commands.StartingMenu()
 
-            if CommandInput == "back":
+            if CommandInput == "back": # 
                 commands.StartingMenu()
 
 # run shit here
