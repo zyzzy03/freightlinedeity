@@ -3,8 +3,6 @@ import TerminalDecor_mod
 import ter_mod as t
 import dict_mod as dict
 import sheller_mod as sheller
-from rich.console import Console
-from rich.table import Table
 
 # THIRD PROTOTYPE
 # ~~ Early Alpha (v03x) ~~
@@ -23,6 +21,9 @@ from rich.table import Table
 
 # im gonna rewrite this in C++, one day, and when I mean one day
 # i mean when i get the gcc compiler to fucking run
+
+class initalising:
+    pass
 
 
 #---------------------------
@@ -61,10 +62,7 @@ class ricing:
 
         if os_mode == "win":
             subprocess.Popen("cls", shell=True)
-
-    def exit():
-        exit_input = input(t.ter[1] + "press any key to exit: ")
-        return            
+            
 
 
 
@@ -96,7 +94,6 @@ class database:
         time.sleep(3)
         conn.commit()
         conn.close()
-
 
 # SQL INPUTS V ========================= V
     def sqlInput_vital():
@@ -143,33 +140,19 @@ class database:
     def sqlReadExe():
         TerminalDecor_mod.asciiSeperators.LineMid()
         os.system('mode con lines=25 cols=135')
+        
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
-        
-        lmba_TableCollum = lambda ColName : db_table.add_column(ColName, 
-                                                                justify="left", 
-                                                                no_wrap=False)
-        lmba_TableRow = lambda cell_0, cell_1, cell_2, cell_3 : db_table.add_row(cell_0[0],
-                                                                                 cell_1[1],
-                                                                                 cell_2[2],
-                                                                                 cell_3[3])
-        db_table = Table(title= "< Registered projects >")
 
-        c.execute("""SELECT * FROM vital;""")
-        TableContents = c.fetchall()
+        x = c.execute("""SELECT * FROM vital;""")
+        x = c.fetchall()
 
-        lmba_TableCollum("Name")
-        lmba_TableCollum("Version")
-        lmba_TableCollum("Location")
-        lmba_TableCollum("status")
-        # print(t.ter[0] + t.ter[2] + "Apologies for the scuffed presnetation :(")
-        # print("|     " + "< Name >" + "     |     " + "< Version >" + "     |     " + "< Location >"  + "     |     " + "< Status >"  + "     |")
-        # TerminalDecor_mod.asciiSeperators.LineMid()
-        for TableContents in TableContents:
-            lmba_TableRow(TableContents, TableContents, TableContents, TableContents)
+        print(t.ter[0] + t.ter[2] + "Apologies for the scuffed presnetation :(")
 
-        console = Console()
-        console.print(db_table)
+        print("|     " + "< Name >" + "     |     " + "< Version >" + "     |     " + "< Location >"  + "     |     " + "< Status >"  + "     |")
+        TerminalDecor_mod.asciiSeperators.LineMid()
+        for x in x:
+            print(t.ter[0] + x[0] + "\t|\t" + x[1] + "\t|\t" +  x[2] + "\t|\t" +  x[3] + "\t")
 
         conn.commit()
         conn.close()
@@ -179,35 +162,23 @@ class database:
     def sqlReadProj():
         TerminalDecor_mod.asciiSeperators.LineMid()
         print("project mode")
-        
+            
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
-        lmba_TableCollum = lambda ColName : db_table.add_column(ColName, 
-                                                                justify="left", 
-                                                                no_wrap=False)
-        lmba_TableRow = lambda cell_0, cell_1, cell_2 : db_table.add_row(cell_0[0],
-                                                                         cell_1[1],
-                                                                         cell_2[2])
-        
-        db_table = Table(title= "< Registered projects >")
-
-
-        lmba_TableCollum("Project name")
-        lmba_TableCollum("Root directory")
-        lmba_TableCollum("status")
 
         c.execute("""SELECT * FROM projects;""")
-        TableContents = c.fetchall()
+        x = c.fetchall()
 
-        for TableContents in TableContents:
-            lmba_TableRow(TableContents, TableContents, TableContents)
-
-        console = Console()
-        console.print(db_table)
-
+        print(t.ter[0] + t.ter[1] + "Apologies for the scuffed presnetation ;(")
+        print(t.ter[0] + "\t" + "< Project name >" + "\t|\t" + "< Location >" + "\t|\t" + "< status >" + "\t|")
+        TerminalDecor_mod.asciiSeperators.LineMid()
+        for x in x:
+            print(t.ter[0] + x[0] + "\t| " + x[1] + "\t| " + x[2])
+        
         conn.commit()
         conn.close()
-        ricing.exit()
+        
+
 
 
 #---------------------------
@@ -236,11 +207,11 @@ class projectSetup:
         TerminalDecor_mod.asciiSeperators.LineMid()
 
         print(t.ter[0], "Choose project structure type: ")
-        TerminalOptions = ["Location: FLD/home/create/ProjectSetup",
+        TerminalOptions = ["FLD/home/create/ProjectSetup",
                         "a    : animation",
                         "c    : character modelling", 
                         "g    : generic, catch-all project set-up",
-                        "e    : environment modelling",
+                        "e    : environment modelling contains houdini",
                         "back : return to home"]
         
         TerminalDecor_mod.asciiRicing.lister(TerminalOptions)
@@ -309,45 +280,43 @@ class projectSetup:
 
     def WorkspaceFiles():
             """ Writes scripts and Workspace files to project """
-            TerminalOptions = ["Location: FLD/home/create/ProjectSetup/WorkspaceFiles",
+            TerminalOptions = ["FLD/home/create/ProjectSetup/WorkspaceFiles",
                                "a       : animation workspace",
                                "c       : character modelling and rigging",
-                               "e       : environment modelling. Contains houdini folder.",
+                               "e       : environment modelling",
                                "g       : generic project",
                                "maya    : include maya workspace",
-                               "-r      : include resources in project"
-                               "back    : go back"]
+                               "-r      : Load pre-made resources into project",
+                               "return    : go back"]
             
             print(t.ter[1], "choose workspace type")
             WorkspaceChoice = input(t.ter[1])
 
-            lmba_CopyTo = lambda path, t_dir : s.copy("./" + path, t_dir)
+            CopyTo = lambda path, t_dir : s.copy("./" + path, t_dir)
 
             if "a" in WorkspaceChoice:
-                lmba_CopyTo("./workspaces/WorkFile_animation.blend", TargetDir)
-                lmba_CopyTo("./exporters/SceneExport_anima.py", TargetDir + dict.dirs.SCRPT.value[1])
+                CopyTo("./workspaces/WorkFile_animation.blend", TargetDir)
+                CopyTo("./exporters/SceneExport_anima.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "c" in WorkspaceChoice:
-                lmba_CopyTo("./workspaces/WorkFile_character.blend", TargetDir)
-                lmba_CopyTo("./exporters/SceneExport_character.py", TargetDir + dict.dirs.SCRPT.value[1])
+                CopyTo("./workspaces/WorkFile_character.blend", TargetDir)
+                CopyTo("./exporters/SceneExport_character.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "e" in WorkspaceChoice:
-                lmba_CopyTo("./workspaces/WorkFile_env.blend", TargetDir)
-                lmba_CopyTo("./exporters/SceneExport_env.py", TargetDir + dict.dirs.SCRPT.value[1])
+                CopyTo("./workspaces/WorkFile_env.blend", TargetDir)
+                CopyTo("./exporters/SceneExport_env.py", TargetDir + dict.dirs.SCRPT.value[1])
 
             if "g" in WorkspaceChoice:
-                lmba_CopyTo("./workspaces/WorkFile_generic.blend", TargetDir)
+                CopyTo("./workspaces/WorkFile_generic.blend", TargetDir)
 
             if "maya" in WorkspaceChoice:
-                lmba_CopyTo("./workspaces/workspace.mel", TargetDir) # i wanna get to this later
+                CopyTo("./workspaces/workspace.mel", TargetDir) # i wanna get to this later
 
             if "-r" in WorkspaceChoice:
-                lmba_CopyTo("./resources", TargetDir + dict.dirs.X.value[0])
+                CopyTo("./resources", TargetDir + dict.dirs.X.value[0])
 
-            if WorkspaceChoice == "back":
+            if WorkspaceChoice == "return":
                 commands.StartingMenu()
-
-
 
 #---------------------------
 # ! FREIGHTING
@@ -355,7 +324,7 @@ class projectSetup:
 class freight:
     def freighting():
         TerminalDecor_mod.asciiSeperators.LineMid()
-        DepartCommands = ["Location: FLD/home/freighting",
+        DepartCommands = ["FLD/home/freighting",
                         "Commands",
                         "basic        : move specific folders/files. No need for registered projects/exes",
                         "intermodal   : schedule exporting from registered projects",
@@ -453,7 +422,7 @@ class freight:
 class commands:
     def StartingMenu():
         TerminalDecor_mod.asciiSeperators.LineOpen()
-        TerminalOptions = ["Location: FLD/home",
+        TerminalOptions = ["FLD/home",
                            "Commands:", 
                            "create      : (Create project structure)",  
                            "freight     : (Schedule file transfer)", 
@@ -488,47 +457,42 @@ class commands:
                 print(t.ter[0])
 
 
-
     def settings():
             TerminalDecor_mod.asciiSeperators.LineMid()
-            TerminalOptions = ["Location: FLD/home/settings",
-                                "Syntax <command> <suffix command>",
+            TerminalOptions = ["FLD/home/settings",
+                                "Syntax: <prompt> -<suffix command>"
                                 "Avialable suffix commands -show | -reg | -rm",
-                                "setup  : (create project register: RUN FIRST)", 
-                                "exe    : register software binaries/.exe to database",
-                                "proj   : (Register projects)",
-                                "back   : go back (duh)"]
+                                "setup      : (create project register: RUN FIRST)", 
+                                "exe   : register software binaries/.exe to database",
+                                "proj  : (Register projects)",
+                                "back       : go back (duh)"]
 
             TerminalDecor_mod.asciiRicing.lister(TerminalOptions)
 
             print(t.ter[0])
             CommandInput = input(t.ter[1])
-            if CommandInput == "setup": # 
+            if CommandInput == "setup":
                 database.sqlSetup()
                 commands.StartingMenu()
             
-
-            """ register to database """
-            if CommandInput == "exe -reg": 
+            """ registers binaries/exes and projects """
+            if CommandInput == "exe -reg":
                 database.sqlInput_vital()
-                commands.StartingMenu()
 
-            if CommandInput == "proj -reg": 
+            if CommandInput == "proj -reg":
                 database.sqlInput_proj()
                 commands.StartingMenu()
             
-            """ show registered items """
+            """ shows  """
             if CommandInput == "exe -show":
                 database.sqlReadExe()
-                ricing.exit()
                 commands.StartingMenu()
 
-            if CommandInput == "proj -show":
+            if CommandInput == "show -proj":
                 database.sqlReadProj()
-                ricing.exit()
                 commands.StartingMenu()
 
-            if CommandInput == "back": # 
+            if CommandInput == "back":
                 commands.StartingMenu()
 
 # run shit here
