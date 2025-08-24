@@ -4,6 +4,9 @@ import ter_mod as t
 import dict_mod as dict
 import sheller_mod as sheller
 
+from rich.console import Console
+from rich.table import Table
+
 # THIRD PROTOTYPE
 # ~~ Early Alpha (v03x) ~~
 # TO DO:
@@ -62,7 +65,10 @@ class ricing:
 
         if os_mode == "win":
             subprocess.Popen("cls", shell=True)
-            
+
+    def exiting():
+        print(t.ter[0], "type and enter anything to exe:")
+        exit_letter = input(t.ter[1])
 
 
 
@@ -135,46 +141,54 @@ class database:
 
 
 # SQL READ V ========================= V
+# FIX: MERGE BOTH OF THESE FUNCTIONS
 
     """ reading exe register """
     def sqlReadExe():
         TerminalDecor_mod.asciiSeperators.LineMid()
-        os.system('mode con lines=25 cols=135')
         
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
+        table = Table(title="< Registered software >")
+        db_output = c.execute("""SELECT * FROM 'vital';""")
+        db_output = c.fetchall()
 
-        x = c.execute("""SELECT * FROM vital;""")
-        x = c.fetchall()
+        table.add_column("name", justify="left")
+        table.add_column("version", justify="left")
+        table.add_column("location", justify="left")
+        table.add_column("status", justify="left")
 
-        print(t.ter[0] + t.ter[2] + "Apologies for the scuffed presnetation :(")
+        for db_output in db_output:
+            table.add_row(db_output[0], db_output[1], db_output[2], db_output[3])
 
-        print("|     " + "< Name >" + "     |     " + "< Version >" + "     |     " + "< Location >"  + "     |     " + "< Status >"  + "     |")
-        TerminalDecor_mod.asciiSeperators.LineMid()
-        for x in x:
-            print(t.ter[0] + x[0] + "\t|\t" + x[1] + "\t|\t" +  x[2] + "\t|\t" +  x[3] + "\t")
-
+        console = Console()
+        console.print(table)
         conn.commit()
         conn.close()
-            
+
+
 
     """ reading exe register """
     def sqlReadProj():
         TerminalDecor_mod.asciiSeperators.LineMid()
-        print("project mode")
-            
+        
         conn = sqlite3.connect("register.db")
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM projects;""")
-        x = c.fetchall()
+        table = Table(title="< Registered software >")
+        db_output = c.execute("""SELECT * FROM 'projects';""")
+        db_output = c.fetchall()
 
-        print(t.ter[0] + t.ter[1] + "Apologies for the scuffed presnetation ;(")
-        print(t.ter[0] + "\t" + "< Project name >" + "\t|\t" + "< Location >" + "\t|\t" + "< status >" + "\t|")
-        TerminalDecor_mod.asciiSeperators.LineMid()
-        for x in x:
-            print(t.ter[0] + x[0] + "\t| " + x[1] + "\t| " + x[2])
-        
+        table.add_column("Project name", justify="left")
+        table.add_column("Location", justify="left")
+        table.add_column("status", justify="left")
+
+        for db_output in db_output:
+            table.add_row(db_output[0], db_output[1], db_output[2])
+
+
+        console = Console()
+        console.print(table)
         conn.commit()
         conn.close()
         
@@ -343,8 +357,13 @@ class freight:
 
 
         if DepartCommands_input == "intermodal":
+            # TO DO: Make this to comply with PEP8
+            # NOTE: this has the amount of elegance as an ozzy osbourne
+            # interview in 1983
+            
             conn = sqlite3.connect("register.db")
             c = conn.cursor()
+
             
             lmba_ExportChange = lambda name: "SceneExport_" + ExportScript_selection + ".py"
             lmba_ProjectAdder = lambda db_name, scene: db_name + scene
@@ -357,25 +376,23 @@ class freight:
             for exe_output in exe_output:
                 print(t.ter[0] + exe_output[0])
 
-            
             BinSelect = input(t.ter[1] + "input exe name: ")
-            
             exe_location = c.execute("SELECT BinLocation FROM vital WHERE binaryName = (?)", 
-                                     (BinSelect,))
+                                                                               (BinSelect,))
             exe_location = c.fetchone()
 
-            database.sqlReadProj()
-            
+            """ Project directory selection """
+            database.sqlReadProj()            
             print(t.ter[0])
             selection = input(t.ter[1] + "select project: ")
 
-            """ Project directory selection """
             db_output = c.execute("SELECT ProjDir FROM projects WHERE ProjName = (?)", 
                                   (selection,))
             db_output = c.fetchone()
 
             conn.commit()
             conn.close()
+
 
             """ Scene file selection """
             print(t.ter[0] + "\n" + t.ter[0] + "Current directory:" + "\n" + db_output[0])
@@ -460,11 +477,11 @@ class commands:
     def settings():
             TerminalDecor_mod.asciiSeperators.LineMid()
             TerminalOptions = ["FLD/home/settings",
-                                "Syntax: <prompt> -<suffix command>"
-                                "Avialable suffix commands -show | -reg | -rm",
+                                "Syntax: <prefix command> <prompt>",
+                                "Avialable suffix commands -show | -reg ",
                                 "setup      : (create project register: RUN FIRST)", 
-                                "exe   : register software binaries/.exe to database",
-                                "proj  : (Register projects)",
+                                "exe        : register software binaries/.exe to database",
+                                "proj       : (Register projects)",
                                 "back       : go back (duh)"]
 
             TerminalDecor_mod.asciiRicing.lister(TerminalOptions)
@@ -476,20 +493,22 @@ class commands:
                 commands.StartingMenu()
             
             """ registers binaries/exes and projects """
-            if CommandInput == "exe -reg":
+            if CommandInput == "reg exe":
                 database.sqlInput_vital()
 
-            if CommandInput == "proj -reg":
+            if CommandInput == "reg proj":
                 database.sqlInput_proj()
                 commands.StartingMenu()
             
-            """ shows  """
-            if CommandInput == "exe -show":
+            """ shows registered projects and executables """
+            if CommandInput == "show exe":
                 database.sqlReadExe()
+                ricing.exiting()
                 commands.StartingMenu()
 
-            if CommandInput == "show -proj":
+            if CommandInput == "show proj":
                 database.sqlReadProj()
+                ricing.exiting()
                 commands.StartingMenu()
 
             if CommandInput == "back":
