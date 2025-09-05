@@ -10,4 +10,4 @@
                                                                                     ########   ########
                                                                                      (Windows edition!)                                                                                                                                                                      
 Part of the Lambda Complex.                                                                                                                                                    
-Version: v0.36 (Early Alpha: Now with exporters and databases!)
+Version: v0.413 (Early Alpha: Now with exporters and databases!)

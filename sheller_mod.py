@@ -1,11 +1,19 @@
 import subprocess, os
 from pathlib import Path
 
-class portSystem:
-    def ShellPorter(os_specified, arg1, arg2, arg3, arg4):                              # "os_specified" should be changed to what OS you want.
-        if os_specified == "UNIX":                                                      # "UNIX" For Unix, or unix-like (Linux, macOS, or BSD)
-            commandShellsBlender.ShellBlenderUnix(arg1, arg2, arg3, arg4)               # "WIN" for (you guessed it), Winodws!
-                                                                                        # This should, in theory, make porting to either easier.
+#  //////////////////////////////////////////////////////////
+# // "os_specified" should be changed to what OS you want. //
+# // "UNIX" For Unix, or unix-like (Linux, macOS, or BSD)  //
+# // "WIN" for (you guessed it), Windows!                  //
+# // This should, in theory, make porting to either easier.//
+# /////////////////////////////////////////////////////////
+
+class portSystem:                                                                       
+    def ShellPorter(os_specified, arg1, arg2, arg3, arg4):                              
+        if os_specified == "UNIX":                                                     
+            commandShellsBlender.ShellBlenderUnix(arg1, arg2, arg3, arg4)               
+                                                                                        
+                                                                                        
         if os_specified == "WIN":
             commandShellsBlender.ShellBlenderWindows(arg1, arg2, arg3, arg4)
 
@@ -27,16 +35,22 @@ class commandShellsBlender:
     """ Shell (cmd.exe) for Windows"""
     def ShellBlenderWindows(ExeCarry, exe, FileLoc, script):
         ExeLocation = os.path.join('cd ' + ExeCarry + ' ')
-        Startname = ' ' + exe + ' '
-        TargetFile = os.path.join('"' + FileLoc + '"')
-        ScriptLoc = os.path.join('"' + script + '"')
+        Startname = f" {exe} "
+        TargetFile = os.path.join(f'"{FileLoc}"')
+        ScriptLoc = os.path.join(f'"{script}"')
+
+        ShellCommand = f'cd "{ExeCarry}" && blender {FileLoc} --background --python {ScriptLoc}'
 
         print("~ (command output) " + ExeLocation + "&&" + Startname + TargetFile + ' --background --python ' + ScriptLoc)
-        subprocess.Popen(ExeLocation + "&&" + Startname + TargetFile + ' --background --python ' + ScriptLoc, shell=True)
+        subprocess.Popen(ShellCommand, shell=True)
 
 
 class commandShellSubPaint:
-    pass
+    def ShellSubPaint():
+        exe = '"' + exe + '"'
+        mesh_import = ""
+
+        subprocess.Popen(exe + " --mesh " + mesh_import + " --split-by-udim", shell=True)
 
 class commandsShellMaya:
     def ShellMayaUnix():
@@ -56,3 +70,4 @@ class commandsShellMaya:
 # cd <Drive:/directory/to/exe/file> && blender "<Drive:\blend\file\directory\example>.blend" --background --python "Drive:/path/to/python/file>.py"  
 # WINDOWS EXAMPLE
 # cd c:/Program Files/Blender Foundation/Blender 4.4 && blender "C:\Users\Jayjay\Documents\readme.blend"  --background --python "C:\OneDrive\OneDrive - University of Gloucestershire\python\FLD_win\exporters\SceneExport_env.py"
+# cd C:\Program Files\Adobe\Adobe Substance 3D Painter && "Adobe Substance 3D Painter.exe" --mesh --split-by-udim C:\OneDrive\OneDrive - University of Gloucestershire\LinuxTransfer\projects\3D\projects\personal\CivilEng\texture\import\low.fbx
